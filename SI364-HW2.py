@@ -10,17 +10,63 @@
 ## Edit the following Flask application code so that if you run the application locally and got to the URL http://localhost:5000/question, you see a form that asks you to enter your favorite number. Once you enter a number and submit it to the form, you should then see a web page that says "Double your favorite number is <number>". For example, if you enter 2 into the form, you should then see a page that says "Double your favorite number is 4". Careful about types in your Python code!
 ## You can assume a user will always enter a number only.
 
-from flask import Flask
+
+from flask import Flask, render_template, request, json
 app = Flask(__name__)
 app.debug = True
 
 @app.route('/')
 def hello_to_you():
-    return 'Hello!'
+    # return render_template('index.html')
+    return "Hello!"
+
+
+@app.route('/question', methods=['GET', 'POST'])
+def questionpage():
+	if request.method == "POST":
+		num = request.form['number'] 
+		intnum = int(num)
+		return "Double your favorite number is " + str(intnum*2)
+	else:
+		return render_template('index.html')
+
+
+
+@app.route('/whatyearwereyouborn', methods=['GET', 'POST'])
+def howoldareyou():
+	htmlx = """<!DOCTYPE html>
+<html>
+<body>
+<form action="http://localhost:5000/whatyouwereyoubornanswer" method="GET">
+<div>
+<label>How old are you?
+<input type="text" name="number" value="">
+</label>
+<input type="submit" value="Submit your age">
+</div>
+</form>
+</body>
+</html>
+"""
+	return htmlx
+
+@app.route('/whatyouwereyoubornanswer', methods=['GET', 'POST'])	
+def whatyearwereyouborn():
+	if request.method == "GET":
+		answer = request.args['number']
+		abc = int(answer)
+		return "You were born in the year " +str(2017 - abc)
+
+
+# @app.route('/yes')
+# def yes():
+#     # return render_template('index.html')
+#     return "yes!"
 
 
 if __name__ == '__main__':
     app.run()
+
 
 
 ## [PROBLEM 2]
